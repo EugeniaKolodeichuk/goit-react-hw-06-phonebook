@@ -27,11 +27,14 @@ function Form({ onAddContact }) {
 
   const handleSubmit = e => {
     e.preventDefault();
+
+    /*Before Redux*/
     /* const contacts = {
       name,
       number,
       id: uuidv4(),
     };*/
+
     onAddContact(name, number);
     resetForm();
   };
