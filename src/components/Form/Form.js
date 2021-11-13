@@ -1,16 +1,20 @@
 import { useState } from 'react';
-import { connect } from 'react-redux';
+import { /* connect, */ useDispatch, useSelector } from 'react-redux';
+import { getContacts } from '../../redux/contacts/selectors';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import styles from '../Form/Form.module.css';
 import actions from '../../redux/contacts/actions';
 
-function Form({ onAddContact }) {
+export default function Form(/* { onAddContact } */) {
   const prodIdName = uuidv4();
   const prodIdNumber = uuidv4();
 
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
+
+  const dispatch = useDispatch();
+  const contacts = useSelector(getContacts);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -35,7 +39,17 @@ function Form({ onAddContact }) {
       id: uuidv4(),
     };*/
 
-    onAddContact(name, number);
+    /* console.log(contacts); */
+
+    if (
+      contacts.find(
+        contact => contact.name.toLowerCase() === name.toLowerCase(),
+      )
+    ) {
+      alert(`${name} is already in contacts`);
+    } else dispatch(actions.onAddContact(name, number));
+
+    /* onAddContact(name, number); */
     resetForm();
   };
 
@@ -84,16 +98,17 @@ function Form({ onAddContact }) {
 }
 
 Form.propTypes = {
-  onAddContact: PropTypes.func.isRequired,
+  onAddContact: PropTypes.func,
   number: PropTypes.number,
   name: PropTypes.string,
 };
 
-const mapDispatchToProps = dispatch => {
+/*Redux*/
+/* const mapDispatchToProps = dispatch => {
   return {
     onAddContact: (name, number) =>
       dispatch(actions.onAddContact(name, number)),
   };
 };
 
-export default connect(null, mapDispatchToProps)(Form);
+export default connect(null, mapDispatchToProps)(Form); */
